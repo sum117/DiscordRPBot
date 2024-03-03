@@ -30,7 +30,7 @@ public class SpawnRegisterFormCommand : SlashCommand
 
     private static (Embed Embed, MessageComponent ActionRow) GetRegisterForm(string serverName, string serverIconUrl)
     {
-        var embed = new EmbedBuilder()
+        Embed embed = new EmbedBuilder()
             .WithTitle($"Formulário de criação de personagem para {serverName}")
             .WithDescription("Para criar um personagem, preencha o formulário clicando no botão \"Criar personagem\" e clique em enviar quando finalizar.")
             .WithColor(CommonService.GetRandomColor())
@@ -38,13 +38,13 @@ public class SpawnRegisterFormCommand : SlashCommand
             .WithCurrentTimestamp()
             .Build();
 
-        var button = new ButtonBuilder()
+        ButtonBuilder button = new ButtonBuilder()
             .WithLabel("Criar personagem")
             .WithStyle(ButtonStyle.Primary)
             .WithCustomId(ButtonId.CreateCharacter)
             .WithEmote(new Emoji("📝"));
 
-        var actionRow = new ComponentBuilder()
+        MessageComponent actionRow = new ComponentBuilder()
             .WithButton(button)
             .Build();
 
