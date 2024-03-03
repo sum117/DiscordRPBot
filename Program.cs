@@ -29,7 +29,7 @@ public class Program
 
         client = new DiscordSocketClient();
         client.Log += Log;
-        client.Ready += SetupApplicationCommandsAsync;
+        client.Ready += TrySetupApplicationCommandsAsync;
 
         slashCommandManager = new SlashCommandManager(client);
         client.SlashCommandExecuted += slashCommandManager.ExecuteAsync;
@@ -47,7 +47,7 @@ public class Program
         await Task.Delay(-1);
     }
 
-    private static async Task SetupApplicationCommandsAsync()
+    private static async Task TrySetupApplicationCommandsAsync()
     {
 
         SocketGuild? guild = client?.Guilds.First();
