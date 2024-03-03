@@ -1,8 +1,8 @@
-﻿using System.Runtime.CompilerServices;
-using Discord;
+﻿using Discord;
 using Discord.Net;
 using Discord.WebSocket;
 using DiscordRpBot.Commands;
+using DiscordRpBot.Interactions;
 using DiscordRpBot.Managers;
 using DiscordRpBot.Services;
 using DiscordRpBot.Storage;
@@ -18,7 +18,7 @@ public class Program
     private static StorageContext? db;
     private static DiscordSocketClient? client;
     private static SlashCommandManager? slashCommandManager;
-
+    private static ButtonManager? buttonManager;
     public static JObject? BotConfig { get; private set; }
 
     public static async Task Main()
@@ -28,11 +28,13 @@ public class Program
         await db.Database.MigrateAsync();
 
         client = new DiscordSocketClient();
-        client.Log += Log;
-        client.Ready += TrySetupApplicationCommandsAsync;
-
         slashCommandManager = new SlashCommandManager(client);
-        client.SlashCommandExecuted += slashCommandManager.ExecuteAsync;
+        buttonManager = new ButtonManager(client);
+
+        client.SlashCommandExecuted += slashCommandManager.HandleItemAsync;
+        client.ButtonExecuted += buttonManager.HandleItemAsync;
+        client.Ready += SetupManagersAsync;
+        client.Log += Log;
 
         JObject config = TryGetConfigFile(isDevelopment: true);
         string? token = config.Value<string>(TOKEN_NAME);
@@ -47,7 +49,7 @@ public class Program
         await Task.Delay(-1);
     }
 
-    private static async Task TrySetupApplicationCommandsAsync()
+    private static async Task SetupManagersAsync()
     {
 
         SocketGuild? guild = client?.Guilds.First();
@@ -59,21 +61,16 @@ public class Program
 
         try
         {
-            if (slashCommandManager == null)
-            {
-                Console.WriteLine("Slash command manager not found");
-                return;
-            }
-
-            List<SlashCommand> commands = await slashCommandManager.RegisterCommandsAsync();
+            List<BaseSlashCommand>? commands = slashCommandManager != null ? await slashCommandManager.RegisterItemsAsync() : null;
+            List<BaseButtonInteraction>? buttonInteractions = buttonManager != null ? await buttonManager.RegisterItemsAsync() : null;
         }
         catch (HttpException exception)
         {
             string json = JsonConvert.SerializeObject(exception.Errors, Formatting.Indented);
-            Console.WriteLine($"Failed to create application command: {json}");
+            Console.WriteLine($"Failed to register bot manager items: {exception.Message}\n{json}");
         }
 
-        Console.WriteLine("Application commands registered");
+        Console.WriteLine("Bot managers registered successfully");
     }
 
     private static Task Log(LogMessage msg)

@@ -1,16 +1,15 @@
 using Discord;
 using Discord.WebSocket;
-using DiscordRpBot.Commands;
 using DiscordRpBot.Services;
 using DiscordRpBot.Constants;
 
 
-
-public class SpawnRegisterFormCommand : SlashCommand
+namespace DiscordRpBot.Commands;
+public class SpawnRegisterFormCommand : BaseSlashCommand
 {
     public SpawnRegisterFormCommand()
     {
-        Name = "spawnregisterform";
+        Name = "spawn_register_form";
         Description = "Spawns the register form.";
         RequiredPermission = GuildPermission.Administrator;
     }
@@ -24,11 +23,11 @@ public class SpawnRegisterFormCommand : SlashCommand
             return;
         }
 
-        (Embed Embed, MessageComponent ActionRow) messageProperties = GetRegisterForm(guild.Name, guild.IconUrl);
+        (Embed Embed, MessageComponent ActionRow) messageProperties = GetRegisterPanel(guild.Name, guild.IconUrl);
         await command.RespondAsync(embeds: [messageProperties.Embed], components: messageProperties.ActionRow);
     }
 
-    private static (Embed Embed, MessageComponent ActionRow) GetRegisterForm(string serverName, string serverIconUrl)
+    private static (Embed Embed, MessageComponent ActionRow) GetRegisterPanel(string serverName, string serverIconUrl)
     {
         Embed embed = new EmbedBuilder()
             .WithTitle($"Formulário de criação de personagem para {serverName}")

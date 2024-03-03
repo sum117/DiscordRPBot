@@ -3,19 +3,12 @@ using Discord.WebSocket;
 
 namespace DiscordRpBot.Commands
 {
-    public class SlashCommand
+    public abstract class BaseSlashCommand
     {
         public string? Name { get; set; }
         public string? Description { get; set; }
-
         public GuildPermission? RequiredPermission { get; set; }
-
-
-        public virtual Task ExecuteAsync(SocketSlashCommand command, DiscordSocketClient client)
-        {
-            return Task.CompletedTask;
-        }
-
+        public abstract Task ExecuteAsync(SocketSlashCommand command, DiscordSocketClient client);
         public SlashCommandProperties GetCommandData()
         {
             SlashCommandBuilder builder = new SlashCommandBuilder()
@@ -26,7 +19,6 @@ namespace DiscordRpBot.Commands
             {
                 builder.WithDefaultMemberPermissions(RequiredPermission);
             }
-
 
             return builder.Build();
         }
