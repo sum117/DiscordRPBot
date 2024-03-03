@@ -9,7 +9,7 @@ public class CreateCharacterButtonInteraction : BaseButtonInteraction
 {
     public CreateCharacterButtonInteraction()
     {
-        Id = "create_character";
+        Id = ButtonId.CreateCharacter;
     }
     protected override async Task ProcessAsync(SocketMessageComponent interaction, DiscordSocketClient client)
     {
@@ -19,30 +19,35 @@ public class CreateCharacterButtonInteraction : BaseButtonInteraction
     {
         TextInputBuilder nameInput = new TextInputBuilder()
           .WithLabel("Nome")
+          .WithPlaceholder("Nome do personagem")
           .WithCustomId(TextInputId.Name)
           .WithStyle(TextInputStyle.Short)
           .WithMaxLength(TextInputLength.Short);
 
         TextInputBuilder personalityInput = new TextInputBuilder()
         .WithLabel("Personalidade")
+        .WithPlaceholder("Personalidade do personagem")
         .WithCustomId(TextInputId.Personality)
         .WithStyle(TextInputStyle.Paragraph)
         .WithMaxLength(TextInputLength.Medium);
 
         TextInputBuilder appearanceInput = new TextInputBuilder()
-         .WithLabel("Aparência")
-         .WithCustomId(TextInputId.Appearance)
-         .WithStyle(TextInputStyle.Paragraph)
+         .WithLabel("Url de imagem")
+         .WithPlaceholder("https://example.com/image.png")
+         .WithCustomId(TextInputId.ImageUrl)
+         .WithStyle(TextInputStyle.Short)
          .WithMaxLength(TextInputLength.Medium);
 
         TextInputBuilder powerInput = new TextInputBuilder()
          .WithLabel("Poder")
+         .WithPlaceholder("Poder do personagem")
          .WithCustomId(TextInputId.Power)
          .WithStyle(TextInputStyle.Paragraph)
          .WithMaxLength(TextInputLength.Paragraph);
 
         TextInputBuilder backstoryInput = new TextInputBuilder()
          .WithLabel("História")
+         .WithPlaceholder("História do personagem")
          .WithCustomId(TextInputId.Backstory)
          .WithStyle(TextInputStyle.Paragraph)
          .WithMaxLength(TextInputLength.Paragraph);

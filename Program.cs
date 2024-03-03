@@ -19,6 +19,7 @@ public class Program
     private static DiscordSocketClient? client;
     private static SlashCommandManager? slashCommandManager;
     private static ButtonManager? buttonManager;
+    private static ModalManager? modalManager;
     public static JObject? BotConfig { get; private set; }
 
     public static async Task Main()
@@ -30,9 +31,11 @@ public class Program
         client = new DiscordSocketClient();
         slashCommandManager = new SlashCommandManager(client);
         buttonManager = new ButtonManager(client);
+        modalManager = new ModalManager(client);
 
         client.SlashCommandExecuted += slashCommandManager.HandleItemAsync;
         client.ButtonExecuted += buttonManager.HandleItemAsync;
+        client.ModalSubmitted += modalManager.HandleItemAsync;
         client.Ready += SetupManagersAsync;
         client.Log += Log;
 
@@ -63,6 +66,7 @@ public class Program
         {
             List<BaseSlashCommand>? commands = slashCommandManager != null ? await slashCommandManager.RegisterItemsAsync() : null;
             List<BaseButtonInteraction>? buttonInteractions = buttonManager != null ? await buttonManager.RegisterItemsAsync() : null;
+            List<BaseModalInteraction>? modalInteractions = modalManager != null ? await modalManager.RegisterItemsAsync() : null;
         }
         catch (HttpException exception)
         {
@@ -95,3 +99,4 @@ public class Program
         }
     }
 }
+

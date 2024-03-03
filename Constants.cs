@@ -14,12 +14,12 @@ namespace DiscordRpBot.Constants
     public static class TextInputId
     {
         public const string Name = "name_input";
+        public const string ImageUrl = "image_input";
         public const string Backstory = "backstory_input";
         public const string Power = "power_input";
 
         public const string Personality = "personality_input";
 
-        public const string Appearance = "appearance_input";
 
     }
 
